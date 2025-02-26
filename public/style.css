@@ -1,0 +1,108 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #ca2626;
+}
+
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.product-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    padding: 15px;
+    text-align: center;
+}
+
+.product-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.product-card h3 {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.product-card p {
+    font-size: 14px;
+    color: #555;
+}
+
+.product-card a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.product-card a:hover {
+    text-decoration: underline;
+}
+
+form {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+form h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+form label {
+    font-weight: bold;
+    display: block;
+    margin: 10px 0 5px;
+}
+
+form input, form select, form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+form input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 12px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+form input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para los campos opcionales */
+form .optional {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 10px;
+}

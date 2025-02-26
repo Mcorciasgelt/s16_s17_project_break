@@ -5,6 +5,40 @@ require("dotenv").config()
 
 const BASE_URL = process.env.BASE_URL
 
+//BASE DEL HTML
+const baseHtml = 
+    `
+    <head>
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <nav>
+            <a href="/api/dashboard">Dashboard</a>
+            <a href="/api/dashboard/new">Nuevo Producto</a>
+        </nav>
+    `;
+
+// FUNCIÓN TEMPLATE PARA PINTAR LAS CARDS DE PRODUCTOS
+const getProductCards = (products) => {
+    let html = '';
+    for (let product of products) {
+        html += `
+            <div class="product-card">
+                <img src="${product.Imagen}" alt="${product.Nombre}">
+                <h2>${product.Nombre}</h2>
+                <p>${product.Descripcion}</p>
+                <p>${product.Precio}€</p>
+                <a href="/api/dashboard/${product._id}">Ver detalle</a>
+                <a href="/api/product/${product._id}">Ver detalle Producto</a>
+                <a href="/api/dashboard/${product._id}/edit">Editar</a>
+                <a href="/api/dashboard/${product._id}/delete">Eliminar</a>
+            </div>
+        `;
+    }
+    return html;
+};
+
+
 const showProducts = async (req, res) => {
     try {
         const products = await Product.find().lean();
@@ -36,6 +70,94 @@ const showProductById = async (req, res) => {
     }
 }
 
+const baseForm = 
+    `
+    <form action="/api/dashboard" method="POST">
+        <label for="Nombre">Nombre:</label>
+        <input type="text" id="Nombre" name="Nombre" required><br>
+
+        <label for="Descripcion">Descripción:</label>
+        <textarea id="Descripcion" name="Descripcion" required></textarea><br>
+
+        <label for="Imagen">Imagen URL:</label>
+        <input type="text" id="Imagen" name="Imagen"><br>
+
+        <label for="Categoria">Categoría:</label>
+        <select id="Categoria" name="Categoria" required>
+            <option value="Camisetas">Camisetas</option>
+            <option value="Pantalones">Pantalones</option>
+            <option value="Zapatos">Zapatos</option>
+            <option value="Accesorios">Accesorios</option>
+        </select><br>
+
+        <label for="Talla">Talla:</label>
+        <select id="Talla" name="Talla" required>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+        </select><br>
+
+        <label for="Precio">Precio:</label>
+        <input type="number" id="Precio" name="Precio" required><br>
+
+        <button type="submit">Crear Producto</button>
+    </form>
+    `
+
+const showNewProduct = async (req, res) => {
+    
+    res.send(baseHtml + baseForm)
+
+}
+
+const showEditProduct = async (req, res) => {
+
+    const productId = req.params.productId;
+
+    try {
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).send("Producto no encontrado");
+        }
+
+    const editForm = baseForm
+        .replace('<form action="/api/dashboard" method="POST">', `<form action="/api/dashboard/${productId}" method="POST"> <input type="hidden" name="_method" value="PUT">`)
+        .replace('Crear Producto', 'Editar Producto')
+        .replace('id="Nombre"', `value="${product.Nombre}" id="Nombre"`)
+        .replace('</textarea>', `${product.Descripcion}</textarea>`)
+        .replace('id="Imagen"', `value="${product.Imagen}" id="Imagen"`)
+        .replace(`<option value="${product.Categoria}">`, `<option value="${product.Categoria}" selected>`)
+        .replace(`<option value="${product.Talla}">`, `<option value="${product.Talla}" selected>`)
+        .replace('id="Precio"', `value="${product.Precio}" id="Precio"`);
+    
+    res.send(baseHtml + editForm)
+    } catch (error) {
+        res.status(500).send("Error al cargar los datos del producto para editar")
+    }
+}
+
+const updateProduct = async (req, res) => {
+
+    const productId = req.params.productId;
+
+    const { Nombre, Descripcion, Imagen, Categoria, Talla, Precio } = req.body;
+
+    const datosActualizados = { Nombre, Descripcion, Imagen, Categoria, Talla, Precio };
+
+    try {
+        const product = await Product.findByIdAndUpdate(productId, datosActualizados, { new: true } );
+        if (!product) {
+            return res.status(404).send("Producto no encontrado");
+        }
+        res.status(202).json({ message: "Producto actualizado exitosamente", product: product });
+
+    } catch (error) {
+        res.status(500).send("Error al intentar actualizar el producto")
+    }
+}
+
 const createProduct = async (req, res) => {
 
     const { Nombre, Descripcion, Imagen, Categoria, Talla, Precio } = req.body;
@@ -59,41 +181,36 @@ const createProduct = async (req, res) => {
 const showDashboard = async (req, res) => {
     try {
         const products = await Product.find().lean();
-        
-        let htmlDashboard = `
-        <html>
-            <head>
-                <title>Dashboard</title>
-            </head>
-            <body>
-                <h1>Dashboard de Productos</h1>
-                <div style="display: flex; flex-wrap: wrap;">
-        `;
-
-        products.forEach(product => {
-            htmlDashboard += `
-                <div style="border: 1px solid #ddd; padding: 10px; margin: 10px; width: 200px;">
-                <img src="${product.Imagen}" alt="${product.Nombre}" style="width: 100%; height: auto;" />
-                <h3>${product.Nombre}</h3>
-                <p>${product.Descripcion}</p>
-                <p><strong>Precio:</strong> ${product.Precio}€</p>
-                <a href="/api/product/${product._id}">Ver detalles</a>
-            </div>
-            `;
-        })
-
-        htmlDashboard += `
-                </div>
-            </body>
-        </html>
-        `;
+        const productCards = getProductCards(products);     
     
-    res.send(htmlDashboard)
+        res.send(baseHtml + productCards)
 
     } catch (error) {
         res.status(500).send("Error obteniendo los productos");
     }
 };
+
+const showProductDetails = async (req, res) => {
+
+    const productId = req.params.productId;
+    const products = [];
+
+    try {
+        const product = await Product.findById(productId);
+        if (!product) {
+            res.status(404).send("Producto no encontrado");
+        }
+
+        products.push(product);
+        const productCard = getProductCards(products);
+             
+    
+        res.send(baseHtml + productCard)
+    } catch (error) {
+        res.status(500).send("Error obteniendo detalles del producto");
+    }
+
+}
 
 
 module.exports = { 
@@ -101,4 +218,8 @@ module.exports = {
     showProducts,
     showProductById,
     showDashboard,
+    showNewProduct,
+    showEditProduct,
+    updateProduct,
+    showProductDetails,
 }
