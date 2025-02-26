@@ -3,6 +3,7 @@ const { dbConnection } = require("./config/db");
 const productRoutes = require("./routes/productRoutes");
 const app = express();
 require("dotenv").config();
+app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3000
 
 dbConnection();

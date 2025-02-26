@@ -56,9 +56,49 @@ const createProduct = async (req, res) => {
     }
 };
 
+const showDashboard = async (req, res) => {
+    try {
+        const products = await Product.find().lean();
+        
+        let htmlDashboard = `
+        <html>
+            <head>
+                <title>Dashboard</title>
+            </head>
+            <body>
+                <h1>Dashboard de Productos</h1>
+                <div style="display: flex; flex-wrap: wrap;">
+        `;
+
+        products.forEach(product => {
+            htmlDashboard += `
+                <div style="border: 1px solid #ddd; padding: 10px; margin: 10px; width: 200px;">
+                <img src="${product.Imagen}" alt="${product.Nombre}" style="width: 100%; height: auto;" />
+                <h3>${product.Nombre}</h3>
+                <p>${product.Descripcion}</p>
+                <p><strong>Precio:</strong> ${product.Precio}€</p>
+                <a href="/api/product/${product._id}">Ver detalles</a>
+            </div>
+            `;
+        })
+
+        htmlDashboard += `
+                </div>
+            </body>
+        </html>
+        `;
+    
+    res.send(htmlDashboard)
+
+    } catch (error) {
+        res.status(500).send("Error obteniendo los productos");
+    }
+};
+
 
 module.exports = { 
     createProduct,
     showProducts,
     showProductById,
+    showDashboard,
 }
