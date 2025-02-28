@@ -49,7 +49,7 @@ const getNav = (fromDashboard) => {
 
 // FUNCIÓN TEMPLATE PARA PINTAR LAS CARDS DE PRODUCTOS
 const getProductCards = (products, fromDashboard) => {
-    let html = '';
+    let html = '<div class="product-grid">';
     for (let product of products) {
         html += `
             <div class="product-card">
@@ -75,6 +75,11 @@ const getProductCards = (products, fromDashboard) => {
             </div>
             `;
     }
+    html += 
+        `
+        </div>
+        `;
+    
     return html;
 };
 

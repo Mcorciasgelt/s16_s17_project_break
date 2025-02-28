@@ -1,135 +1,251 @@
-body {
-    font-family: Arial, sans-serif;
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Roboto', sans-serif; /* Tipografía moderna */
     background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  h2 {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  p {
+    margin-bottom: 1rem;
+    color: #666;
+  }
+  
+  /* Navbar */
+  nav {
+    background-color: #333;
+    padding: 1rem;
     text-align: center;
-    padding: 20px;
-}
-
-h1 {
-    color: #ca2626;
-}
-
-.product-container {
+  }
+  
+  nav a {
+    color: #fff;
+    margin: 0 1rem;
+    font-size: 1.2rem;
+  }
+  
+  nav a:hover {
+    color: #ffd700; /* Amarillo para el hover */
+  }
+  
+  /* Product Cards */
+  .product-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin: 1rem;
+    transition: transform 0.3s ease;
+    width: 100%;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-10px);
+  }
+  
+  .product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .product-card h2 {
+    font-size: 1.4rem;
+    color: #333;
+    padding: 1rem;
+  }
+  
+  .product-card p {
+    padding: 0 1rem;
+  }
+  
+  .product-card a {
+    display: block;
+    text-align: center;
+    background-color: #4CAF50; /* Verde */
+    color: #fff;
+    padding: 0.8rem;
+    border-radius: 4px;
+    margin: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .product-card a:hover {
+    background-color: #45a049; /* Verde más oscuro */
+  }
+  
+  /* Grid for Product Cards */
+  .product-cards-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    padding: 2rem;
+  }
+  
+  @media (max-width: 1200px) {
+    .product-cards-container {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .product-cards-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .product-cards-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .product-cards-container {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* Product Actions (Dashboard) */
+  .product-actions {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+  
+  .product-actions form {
+    display: inline-block;
+  }
+  
+  .action-btn {
+    background-color: #ff5733; /* Naranja */
+    color: #fff;
+    padding: 0.6rem 1rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .action-btn:hover {
+    background-color: #e74c3c; /* Rojo más oscuro */
+  }
+  
+  .action-form {
+    display: inline;
+  }
+  
+  /* Responsive Styling for Navigation */
+  @media (max-width: 768px) {
+    nav {
+      padding: 1rem 0;
+    }
+  
+    nav a {
+      margin: 0 0.5rem;
+      font-size: 1rem;
+    }
+  }
+  
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* 4 columnas de igual tamaño */
+    gap: 20px; /* Espacio entre las tarjetas */
+    margin-top: 20px;
 }
 
 .product-card {
-    background: #fff;
     border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 200px;
     padding: 15px;
     text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
 }
 
 .product-card img {
-    width: 100%;
+    max-width: 100%;
     height: auto;
-    border-radius: 4px;
+    border-radius: 8px;
 }
 
-.product-card h3 {
-    margin: 10px 0;
-    font-size: 18px;
-    color: #333;
+.product-card:hover {
+    transform: scale(1.05); /* Efecto hover para dar un poco de interactividad */
 }
 
-.product-card p {
-    font-size: 14px;
-    color: #555;
-}
-
-.product-card a {
-    display: inline-block;
-    margin-top: 10px;
-    color: #007bff;
-    text-decoration: none;
-}
-
-.product-card a:hover {
-    text-decoration: underline;
-}
-
+/* Estilo para los formularios */
 form {
-    width: 100%;
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #f4f4f4;
+    background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-form h2 {
-    text-align: center;
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-}
-
+/* Estilo para las etiquetas */
 form label {
-    font-weight: bold;
     display: block;
-    margin: 10px 0 5px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 16px;
 }
 
-form input, form select, form textarea {
+/* Estilo para los inputs, selects y textareas */
+form input,
+form select,
+form textarea {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
+    padding: 12px;
+    margin: 10px 0;
     border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #333;
+    background-color: #f4f4f4;
+    transition: border-color 0.3s;
 }
 
-form input[type="submit"] {
-    background-color: #007bff;
+/* Efecto de enfoque */
+form input:focus,
+form select:focus,
+form textarea:focus {
+    border-color: #58D68D; /* Verde */
+    outline: none;
+}
+
+/* Estilo para el botón */
+form button {
+    width: 100%;
+    padding: 12px;
+    background-color: #58D68D; /* Verde */
     color: white;
     border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 12px;
-    border-radius: 4px;
-    width: 100%;
-}
-
-form input[type="submit"]:hover {
-    background-color: #0056b3;
-}
-
-/* Estilos para los campos opcionales */
-form .optional {
-    font-size: 0.9rem;
-    color: #888;
-    margin-bottom: 10px;
-}
-
-.product-actions {
-    display: flex;
-    flex-direction: column; /* Alinea los botones uno debajo del otro */
-    gap: 5px; /* Espacio entre botones */
-    align-items: center; /* Centra los botones */
-}
-
-.action-form {
-    width: 100%; /* Ocupar todo el ancho disponible */
-}
-
-.action-btn {
-    width: 100%; /* Que ocupen todo el ancho del contenedor */
-    padding: 8px 12px;
-    border: 1px solid #ccc; /* Borde sutil */
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: transparent; /* Sin fondo */
+    border-radius: 6px;
     font-size: 16px;
-    font-weight: bold;
-    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-.action-btn:hover {
-    background-color: #f0f0f0; /* Pequeño cambio al pasar el cursor */
+/* Efecto en el botón */
+form button:hover {
+    background-color: #45b57d; /* Verde más oscuro */
 }
