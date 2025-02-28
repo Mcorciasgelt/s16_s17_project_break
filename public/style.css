@@ -106,3 +106,30 @@ form .optional {
     color: #888;
     margin-bottom: 10px;
 }
+
+.product-actions {
+    display: flex;
+    flex-direction: column; /* Alinea los botones uno debajo del otro */
+    gap: 5px; /* Espacio entre botones */
+    align-items: center; /* Centra los botones */
+}
+
+.action-form {
+    width: 100%; /* Ocupar todo el ancho disponible */
+}
+
+.action-btn {
+    width: 100%; /* Que ocupen todo el ancho del contenedor */
+    padding: 8px 12px;
+    border: 1px solid #ccc; /* Borde sutil */
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: transparent; /* Sin fondo */
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.action-btn:hover {
+    background-color: #f0f0f0; /* Pequeño cambio al pasar el cursor */
+}

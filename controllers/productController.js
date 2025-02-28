@@ -3,23 +3,52 @@
 const Product = require("../models/Product");
 require("dotenv").config()
 
-const BASE_URL = process.env.BASE_URL
+//MENU DEL HTML
+const getNav = (fromDashboard) => {
+    
+    let baseHtml = '';
+    
+    if(fromDashboard) {
+        baseHtml +=
+        `
+        <head>
+            <link rel="stylesheet" href="/style.css">
+        </head>
+        <body>
+            <nav>
+                <a href="/api/dashboard">Productos</a>
+                <a href="/api/dashboard/category/Camisetas">Camisetas</a>
+                <a href="/api/dashboard/category/Pantalones">Pantalones</a>
+                <a href="/api/dashboard/category/Zapatos">Zapatos</a>
+                <a href="/api/dashboard/category/Accesorios">Accesorios</a>
+                <a href="/api/dashboard/new">Nuevo Producto</a>
+            </nav>
+        `;
+    }
 
-//BASE DEL HTML
-const baseHtml = 
-    `
-    <head>
-        <link rel="stylesheet" href="/style.css">
-    </head>
-    <body>
-        <nav>
-            <a href="/api/dashboard">Dashboard</a>
-            <a href="/api/dashboard/new">Nuevo Producto</a>
-        </nav>
-    `;
+    else {
+        baseHtml += 
+        `
+        <head>
+            <link rel="stylesheet" href="/style.css">
+        </head>
+        <body>
+            <nav>
+                <a href="/api/products">Productos</a>
+                <a href="/api/products/category/Camisetas">Camisetas</a>
+                <a href="/api/products/category/Pantalones">Pantalones</a>
+                <a href="/api/products/category/Zapatos">Zapatos</a>
+                <a href="/api/products/category/Accesorios">Accesorios</a>
+                <a href="/api/dashboard/">Dashboard</a>
+            </nav>
+        `;
+    }
+    return baseHtml
+}
+    
 
 // FUNCIÓN TEMPLATE PARA PINTAR LAS CARDS DE PRODUCTOS
-const getProductCards = (products) => {
+const getProductCards = (products, fromDashboard) => {
     let html = '';
     for (let product of products) {
         html += `
@@ -28,29 +57,78 @@ const getProductCards = (products) => {
                 <h2>${product.Nombre}</h2>
                 <p>${product.Descripcion}</p>
                 <p>${product.Precio}€</p>
-                <a href="/api/dashboard/${product._id}">Ver detalle</a>
-                <a href="/api/product/${product._id}">Ver detalle Producto</a>
-                <a href="/api/dashboard/${product._id}/edit">Editar</a>
-                <a href="/api/dashboard/${product._id}/delete">Eliminar</a>
+            `
+            
+            if (fromDashboard) {
+            html += `
+                <a href="/api/dashboard/${product._id}">Administrar Producto</a>
+            `
+            }
+
+            else {
+            html += `
+                <a href="/api/product/${product._id}">Detalle Producto</a>
+            `
+            }
+
+            html += `
             </div>
-        `;
+            `;
     }
+    return html;
+};
+
+// FUNCIÓN TEMPLATE PARA PINTAR LAS CARD DE PRODUCTO POR ID
+const getProductCardId = (product   , fromDashboard) => {
+    let html = '';
+
+        html += `
+            <div class="product-card">
+                <img src="${product.Imagen}" alt="${product.Nombre}">
+                <h2>${product.Nombre}</h2>
+                <p>${product.Descripcion}</p>
+                <p>${product.Precio}€</p>
+            `
+            
+            if (fromDashboard) {
+            html += `
+                    
+                    <div class="product-actions">
+
+                        <form action="/api/dashboard/${product._id}/edit" method="GET" class="action-form">
+                            <button type="submit" class="action-btn">Editar</button>
+                        </form>
+
+                        <form action="/api/dashboard/${product._id}/delete" method="POST">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="action-btn">Eliminar</button>
+                        </form>
+
+                    </div>
+            `
+            }
+
+            html += `
+            </div>
+            `;
+    
     return html;
 };
 
 
 const showProducts = async (req, res) => {
+    
+    const fromDashboard = req.originalUrl.includes('/api/dashboard');
+
     try {
         const products = await Product.find().lean();
         if(products.length === 0) {
             return res.status(404).json({ message: "La lista de productos está vacía"})
         }
 
-        products.forEach((element) => {
-            element.detalle = `${BASE_URL}api/product/${element._id}`;
-        })
-
-        res.status(200).json(products);
+        const productCard = getProductCards(products, fromDashboard);
+        const baseHtml = getNav(fromDashboard);
+        res.send(baseHtml + productCard);
 
     } catch (error) {
         res.status(500).json({ message: "Error obteniendo la información de productos"})
@@ -58,15 +136,40 @@ const showProducts = async (req, res) => {
 }
 
 const showProductById = async (req, res) => {
+    
+    const productId = req.params.productId;
+    const fromDashboard = req.originalUrl.includes('/api/dashboard');
+    
     try {
-        const product = await Product.findById(req.params.productId);
+        const product = await Product.findById(productId);
 
         if(!product) {
             return res.status(404).json({ message: "Producto no encontrado"});
         }
-        res.status(200).json(product);
+        const productCardId = getProductCardId(product, fromDashboard);
+        const baseHtml = getNav(fromDashboard);
+        res.send(baseHtml + productCardId);
     } catch (error) {
         res.status(500).json({ message: "Error buscando el producto"});
+    }
+}
+
+const showProductsByCategory = async (req, res) => {
+    
+    const category = req.params.category;
+    const fromDashboard = req.originalUrl.includes('/api/dashboard');
+    
+    try {
+        const products = await Product.find({ Categoria: category }).lean();
+
+        if(!products) {
+            return res.status(404).json({ message: "Categoría sin productos"});
+        }
+        const productCardsCategory = getProductCards(products, fromDashboard);
+        const baseHtml = getNav(fromDashboard);
+        res.send(baseHtml + productCardsCategory);
+    } catch (error) {
+        res.status(500).json({ message: "Error buscando la categoría"});
     }
 }
 
@@ -108,12 +211,16 @@ const baseForm =
 
 const showNewProduct = async (req, res) => {
     
+    const fromDashboard = req.originalUrl.includes('/api/dashboard');
+    const baseHtml = getNav(fromDashboard);
+
     res.send(baseHtml + baseForm)
 
 }
 
 const showEditProduct = async (req, res) => {
 
+    const fromDashboard = req.originalUrl.includes('/api/dashboard');
     const productId = req.params.productId;
 
     try {
@@ -132,6 +239,7 @@ const showEditProduct = async (req, res) => {
         .replace(`<option value="${product.Talla}">`, `<option value="${product.Talla}" selected>`)
         .replace('id="Precio"', `value="${product.Precio}" id="Precio"`);
     
+    const baseHtml = getNav(fromDashboard);
     res.send(baseHtml + editForm)
     } catch (error) {
         res.status(500).send("Error al cargar los datos del producto para editar")
@@ -151,7 +259,7 @@ const updateProduct = async (req, res) => {
         if (!product) {
             return res.status(404).send("Producto no encontrado");
         }
-        res.status(202).json({ message: "Producto actualizado exitosamente", product: product });
+        res.status(202).redirect("/api/dashboard");
 
     } catch (error) {
         res.status(500).send("Error al intentar actualizar el producto")
@@ -172,16 +280,23 @@ const createProduct = async (req, res) => {
             Precio
         })
         await newProduct.save();
-        res.status(201).json({ message: "Producto creado exitosamente", product: newProduct });
+        
+        const productId = newProduct._id;
+
+        res.status(201).redirect(`/api/dashboard/${productId}`);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 };
 
 const showDashboard = async (req, res) => {
+    
+    const fromDashboard = req.originalUrl.includes('/api/dashboard');    
+    
     try {
         const products = await Product.find().lean();
-        const productCards = getProductCards(products);     
+        const productCards = getProductCards(products, fromDashboard);
+        const baseHtml = getNav(fromDashboard);  
     
         res.send(baseHtml + productCards)
 
@@ -212,14 +327,32 @@ const showProductDetails = async (req, res) => {
 
 }
 
+const deleteProduct = async (req, res) => {
+    
+    const productId = req.params.productId;
+
+    try {
+        const product = await Product.findByIdAndDelete(productId);
+        if (!product) {
+            return res.status(404).send("Producto no encontrado");
+        }
+        res.status(200).redirect("/api/dashboard");
+
+    } catch (error) {
+        res.status(500).send("Error al intentar actualizar el producto")
+    }
+}
+
 
 module.exports = { 
     createProduct,
     showProducts,
     showProductById,
+    showProductsByCategory,
     showDashboard,
     showNewProduct,
     showEditProduct,
     updateProduct,
     showProductDetails,
+    deleteProduct,
 }
