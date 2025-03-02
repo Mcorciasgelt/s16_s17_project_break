@@ -360,4 +360,5 @@ module.exports = {
     updateProduct,
     showProductDetails,
     deleteProduct,
+    getNav,
 }
