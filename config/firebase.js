@@ -39,7 +39,7 @@ const serviceAccount  = {
 
 admin.initializeApp({credential: admin.credential.cert(serviceAccount)});
 
-const firebaseConnection = async() => {
+/* const firebaseConnection = async() => {
     try {
         console.log(serviceAccount);
         
@@ -51,6 +51,6 @@ const firebaseConnection = async() => {
     }
 };
 
-/* firebaseConnection(); */
+firebaseConnection(); */
 
-module.exports = {admin, firebaseConnection};
+module.exports = {admin};

@@ -1,7 +1,8 @@
 require("dotenv").config();
+const cookieParser = require('cookie-parser');
 const express = require("express");
 const { dbConnection } = require("./config/db");
-const {firebaseConnection} = require("./config/firebase");
+/* const {firebaseConnection} = require("./config/firebase"); */
 const productRoutes = require("./routes/productRoutes");
 const authRoutes =  require("./routes/authRoutes");
 const app = express();
@@ -9,6 +10,7 @@ const methodOverride = require('method-override');
 
 app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 const PORT = process.env.PORT || 3000
 
