@@ -2,7 +2,7 @@
 
 // auth Controller
 
-const { admin } = require("../config/firebase");
+const admin = require("../config/firebase");
 
 const firebase = require('firebase/auth');
 
@@ -24,7 +24,7 @@ import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/fir
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app); */
 
-/*
+
 
 const loginForm = async (req, res) => {
         
@@ -162,6 +162,14 @@ const login = async (req, res) => {
     }
 };
 
+const logout = (req, res) => {
+    // Borrar la cookie que contiene el token
+    res.clearCookie('token');
+
+    // Redirigir al usuario a la página de login o a la página principal
+    res.redirect('/login'); // O la ruta que prefieras
+};
+
 const register = async (req, res) => {
     
     const { email, password } = req.body;
@@ -186,6 +194,6 @@ module.exports = {
     login,
     registerForm,
     register,
+    logout,
 }
 
-*/

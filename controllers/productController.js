@@ -22,6 +22,8 @@ const getNav = (fromDashboard) => {
                 <a href="/api/dashboard/category/Zapatos">Zapatos</a>
                 <a href="/api/dashboard/category/Accesorios">Accesorios</a>
                 <a href="/api/dashboard/new">Nuevo Producto</a>
+                <a href="/logout">Logout</a>
+                
             </nav>
         `;
     }
