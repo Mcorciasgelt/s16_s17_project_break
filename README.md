@@ -23,7 +23,10 @@ GET /api/product/:productId → Obtiene un producto por su ID.
 GET /api/products/category/:category → Obtiene productos por categoría.
 
 
-Panel de Administración
+Panel de Administración 
+// PARA HACER PRUEBAS USAR EL SIGUIENTE USUARIO
+hola@projectbreak.com
+123456
 
 GET /api/dashboard → Muestra el panel de control.
 
