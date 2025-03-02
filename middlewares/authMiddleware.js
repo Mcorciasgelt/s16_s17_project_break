@@ -1,19 +1,25 @@
+/* 
+
 const admin = require("../config/firebase");
 
 const verifyToken = async (req, res, next) => {
-  const token = req.header("Authorization")?.replace("Bearer ", "");
+  const token = req.cookies.token;
 
   if (!token) {
-    return res.status(403).send("No se recibió ningún Token");
+    return res.redirect('/login');
   }
 
-  try {
-    const decodedToken = await admin.auth().verifyIdToken(token);
+  admin.auth().verifyIdToken(idToken)
+  .then(decodedToken => {
     req.user = decodedToken;
     next();
-  } catch (error) {
-    return res.status(401).send("Token invalido o vencido");
-  }
+  })
+  .catch(error => {
+    console.error('Error verifying token:', error);
+    res.redirect('/login');
+  });
 };
 
-module.exports = verifyToken;
+module.exports = verifyToken; 
+
+*/

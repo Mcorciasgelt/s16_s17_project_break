@@ -20,6 +20,8 @@ const app = initializeApp(firebaseConfig);
 
  */
 
+/*
+
 const admin = require("firebase-admin");
 require("dotenv").config();
 
@@ -51,6 +53,8 @@ admin.initializeApp({credential: admin.credential.cert(serviceAccount)});
     }
 };
 
-firebaseConnection(); */
+firebaseConnection(); 
 
-module.exports = {admin};
+module.exports = admin;
+
+*/

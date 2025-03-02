@@ -1,3 +1,4 @@
+/* 
 // rutas y endpoints de autentificación
 
 const express = require("express");
@@ -13,4 +14,5 @@ router.post("/login", authController.login)
 router.get("/register", authController.registerForm );
 router.post("/register", authController.register)
 
-module.exports = router;
+module.exports = router; 
+*/

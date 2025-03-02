@@ -1,16 +1,17 @@
 require("dotenv").config();
-const cookieParser = require('cookie-parser');
+// FIREBASE const cookieParser = require('cookie-parser');
 const express = require("express");
 const { dbConnection } = require("./config/db");
 /* const {firebaseConnection} = require("./config/firebase"); */
 const productRoutes = require("./routes/productRoutes");
-const authRoutes =  require("./routes/authRoutes");
+// FIREBASE const authRoutes =  require("./routes/authRoutes");
 const app = express();
 const methodOverride = require('method-override');
 
 app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+
+// FIREBASE app.use(cookieParser());
 
 const PORT = process.env.PORT || 3000
 
@@ -22,7 +23,7 @@ app.use(express.static("public"));
 app.use(express.json());
 
 app.use(productRoutes);
-app.use(authRoutes);
+// FIREBASE app.use(authRoutes);
 
 app.get("/", (req, res) => {
     res.send("✅Server started")
